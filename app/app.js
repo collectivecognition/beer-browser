@@ -25,7 +25,7 @@ angular.module('app', [
       views: {}
     });
 
-  $urlRouterProvider.otherwise('/404');
+  $urlRouterProvider.otherwise('/store-picker');
 })
 
 .run(function($anchorScroll, config, $rootScope) {
