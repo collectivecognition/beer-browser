@@ -88,7 +88,7 @@ h1 .button {
   float: left;
 }
 .content.inventory .loading {
-  background: url("/images/loading.gif") center center no-repeat;
+  background: url("images/loading.gif") center center no-repeat;
 }
 .content.inventory .product {
   overflow: hidden;
