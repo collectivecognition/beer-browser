@@ -25,7 +25,13 @@ var paths = {
 };
 
 gulp.task('start', ['start', 'watch']);
-gulp.task('deploy', ['js', 'styles', 'static', 'ghPages']);
+
+gulp.task('build', ['clean', 'js', 'styles', 'static']);
+
+gulp.task('deploy', ['build'], function() {
+  return gulp.src(['build/*', 'build/**/*'])
+    .pipe(ghPages());
+});
 
 var watching = false;
 gulp.task('watch', ['js', 'styles', 'static'], function() {
