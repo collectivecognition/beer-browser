@@ -1,0 +1,22 @@
+<div class="content inventory">
+  <h1>
+    <span class="title">Inventory For {{store.name}}</span>
+    <a class="button" ui-sref="storePicker">Change Your Store</a>
+  </h1>
+
+  <div infinite-scroll="load()" infinite-scroll-disabled="loading" infinite-scroll-distance="1" class="products">
+    <div ng-repeat="product in products" class="product">
+      <img ng-src="{{product.image_thumb_url || config.app.defaultProductThumbUrl}}">
+      <div class="meta">
+        <div class="name">{{product.name}}</div>
+        <div class="size">{{product.package}}</div>
+        <div class="price">{{product.regular_price_in_cents / 100 | currency}}</div>
+      </div>
+      <div class="inventory">
+        <div class="big">{{product.quantity}}</div>
+        <div class="small">In Stock</div>
+      </div>
+    </div>
+    <div class="loading" ng-show="loading"></div>
+  </div>
+</div>
