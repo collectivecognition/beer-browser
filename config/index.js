@@ -9,7 +9,7 @@ var config = {
     port: 1234
   },
   lcboApi: {
-    key: 'MDpmOWMzNmQ3Mi1lNjlhLTExZTQtYTQxZi1hZmY0ODQ0OTUxZDU6NFMxQzhXS0VPY0ZHQXdneXRuWFg5QURuN2h0dmdPc2pQeGpR',
+    key: 'MDpkNjI4NzBkMi1lNmNkLTExZTQtYTVhYy1iYjhiNjE5YTUxYzE6UDZyN3dIV0RWcUk3NHRZdDllRjVxUWNOUHdZUjBjSGhTWjZI',
     path: 'http://lcboapi.com'
   }
 };
