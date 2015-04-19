@@ -45203,7 +45203,7 @@ angular.module('app', [
       views: {}
     });
 
-  $urlRouterProvider.otherwise('/404');
+  $urlRouterProvider.otherwise('/store-picker');
 }])
 
 .run(["$anchorScroll", "config", "$rootScope", function($anchorScroll, config, $rootScope) {
@@ -45311,7 +45311,7 @@ angular.module("config", [])
 		"name": "lcbo",
 		"version": "0.0.0",
 		"apiPath": "",
-		"defaultProductThumbUrl": "/images/no-image.png"
+		"defaultProductThumbUrl": "images/no-image.png"
 	},
 	"server": {
 		"port": 1234
