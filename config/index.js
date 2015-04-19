@@ -3,7 +3,7 @@ var config = {
 		name: 'lcbo',
 		version: '0.0.0',
 		apiPath: '',
-    defaultProductThumbUrl: '/images/no-image.png'
+    defaultProductThumbUrl: 'images/no-image.png'
 	},
   server: {
     port: 1234
