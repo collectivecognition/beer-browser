@@ -25,7 +25,7 @@ angular.module('app', [
       views: {}
     });
 
-  $urlRouterProvider.otherwise('/store-picker');
+  $urlRouterProvider.otherwise('/inventory');
 })
 
 .run(function($anchorScroll, config, $rootScope) {
