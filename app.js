@@ -45203,7 +45203,7 @@ angular.module('app', [
       views: {}
     });
 
-  $urlRouterProvider.otherwise('/store-picker');
+  $urlRouterProvider.otherwise('/inventory');
 }])
 
 .run(["$anchorScroll", "config", "$rootScope", function($anchorScroll, config, $rootScope) {
