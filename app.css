@@ -1,7 +1,8 @@
 @import url("//fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic|Oswald:400,700,300");
 body {
   background: #f0d8a8;
-  padding: 20px;
+  padding: 0;
+  margin: 0;
 }
 * {
   box-sizing: border-box;
@@ -45,6 +46,14 @@ h1 .title {
 }
 h1 .button {
   margin-left: 20px;
+}
+header {
+  width: 100%;
+  height: 60px;
+  background: #6f7c47;
+}
+.content {
+  padding: 20px;
 }
 .content.store-picker input[type=text] {
   border-radius: 20px;
@@ -97,6 +106,22 @@ h1 .button {
   position: relative;
   margin: 0 15px 15px 0;
   background: #fff;
+}
+.content.inventory .product.new:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: 40px;
+  background: #4e2042;
+  content: 'NEW';
+  line-height: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Oswald';
+  color: #fff;
+  padding: 0 20px;
+  border-bottom-right-radius: 10px;
 }
 .content.inventory .product img {
   width: 100%;

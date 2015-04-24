@@ -45230,8 +45230,9 @@ angular.module('app')
       $state.go('storePicker');
     }
 
-    $scope.products = [];9
+    $scope.products = [];
     $scope.page = 1;
+    $scope.category = 'Beer';
 
     $scope.load = function() {
       if($scope.loading || !$scope.page){ return; }
@@ -45242,19 +45243,50 @@ angular.module('app')
         per_page: 100,
         where_not: 'is_dead,is_discontinued',
         order: 'id.desc',
-        // q: 'beer',
         page: $scope.page
       };
 
       Restangular.one('stores', $scope.store.id).one('products').get(options).then(function(response) {
-        $scope.products = $scope.products.concat(_.filter(response.result, function(result) {
-          return result.primary_category === 'Beer' && result.quantity > 0;
-        }));
+        $scope.products = $scope.products.concat(response.result);
         $scope.page = response.pager.next_page;
         $scope.loading = false;
+
+        // Cache whether
+
+        var cache = localStorageService.get('cache');
+        if(!cache){
+          cache = {
+            stores: {}
+          };
+        }
+        if(!cache.stores[$scope.store.id]){
+          cache.stores[$scope.store.id] = {};
+        }
+        _.each(response.result, function(product) {
+          if(!cache.stores[$scope.store.id][product.id]){
+            cache.stores[$scope.store.id][product.id] = {
+              seen: true
+            };
+            product.new = true;
+          }
+        });
+        localStorageService.set('cache', cache);
+      });
+    };
+  }])
+
+  .filter("filters", ["$filter", function($filter){
+    return function(input, primary, secondary){
+      return _.filter(input, function(item) {
+        return (!primary || item.primary_category === primary) 
+          && (!secondary || item.secondary_category === secondary)
+          && (primary !== 'Beer' || !item.name.match(/sake/ig))
+          && item.quantity > 0;
       });
     };
   }]);
+
+
 angular.module('app')
 
 .config(["$stateProvider", "config", function($stateProvider, config) {
@@ -45302,7 +45334,7 @@ angular.module('app')
       }
     });
 }]);
-angular.module("app").run(["$templateCache", function($templateCache) {$templateCache.put("inventory.html","<div class=\"content inventory\">\n  <h1>\n    <span class=\"title\">Inventory For {{store.name}}</span>\n    <a class=\"button\" ui-sref=\"storePicker\">Change Your Store</a>\n  </h1>\n\n  <div infinite-scroll=\"load()\" infinite-scroll-disabled=\"loading\" infinite-scroll-distance=\"1\" class=\"products\">\n    <div ng-repeat=\"product in products\" class=\"product\">\n      <img ng-src=\"{{product.image_thumb_url || config.app.defaultProductThumbUrl}}\">\n      <div class=\"meta\">\n        <div class=\"name\">{{product.name}}</div>\n        <div class=\"size\">{{product.package}}</div>\n        <div class=\"price\">{{product.regular_price_in_cents / 100 | currency}}</div>\n      </div>\n      <div class=\"inventory\">\n        <div class=\"big\">{{product.quantity}}</div>\n        <div class=\"small\">In Stock</div>\n      </div>\n    </div>\n    <div class=\"loading\" ng-show=\"loading\"></div>\n  </div>\n</div>");
+angular.module("app").run(["$templateCache", function($templateCache) {$templateCache.put("inventory.html","<div class=\"content inventory\">\n  <h1>\n    <span class=\"title\">Inventory For {{store.name}}</span>\n    <a class=\"button\" ui-sref=\"storePicker\">Change Your Store</a>\n\n    <!-- <select ng-model=\"category\">\n      <option value=\"Beer\">Beer</option>\n      <option value=\"Wine\">Wine</option>\n    </select> -->\n  </h1>\n\n  <div infinite-scroll=\"load()\" infinite-scroll-disabled=\"loading\" infinite-scroll-distance=\"1\" class=\"products\">\n    <div ng-repeat=\"product in products | filters:category\" class=\"product\" ng-class=\"{new: product.new}\">\n      <img ng-src=\"{{product.image_thumb_url || config.app.defaultProductThumbUrl}}\">\n      <div class=\"meta\">\n        <div class=\"name\">{{product.name}}</div>\n        <div class=\"size\">{{product.package}}</div>\n        <div class=\"price\">{{product.regular_price_in_cents / 100 | currency}}</div>\n      </div>\n      <div class=\"inventory\">\n        <div class=\"big\">{{product.quantity}}</div>\n        <div class=\"small\">In Stock</div>\n      </div>\n    </div>\n    <div class=\"loading\" ng-show=\"loading\"></div>\n  </div>\n</div>");
 $templateCache.put("storePicker.html","<div class=\"content store-picker\">\n  <h1><span class=\"title\">Search For Stores</span></h1>\n\n	<form ng-submit=\"search()\">\n		<input type=\"text\" ng-model=\"term\" placeholder=\"Search By Address Or Postal Code\">\n    <button class=\"button\">Search</button>\n	</form>\n\n  <div class=\"stores\">\n    <div ng-repeat=\"store in stores\" class=\"store\" ng-click=\"select(store)\">\n      {{store.name}}\n    </div>\n  </div>\n</div>");}]);
 angular.module("config", [])
 
