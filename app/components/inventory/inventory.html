@@ -2,10 +2,15 @@
   <h1>
     <span class="title">Inventory For {{store.name}}</span>
     <a class="button" ui-sref="storePicker">Change Your Store</a>
+
+    <!-- <select ng-model="category">
+      <option value="Beer">Beer</option>
+      <option value="Wine">Wine</option>
+    </select> -->
   </h1>
 
   <div infinite-scroll="load()" infinite-scroll-disabled="loading" infinite-scroll-distance="1" class="products">
-    <div ng-repeat="product in products" class="product">
+    <div ng-repeat="product in products | filters:category" class="product" ng-class="{new: product.new}">
       <img ng-src="{{product.image_thumb_url || config.app.defaultProductThumbUrl}}">
       <div class="meta">
         <div class="name">{{product.name}}</div>

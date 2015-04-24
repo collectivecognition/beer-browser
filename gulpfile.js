@@ -24,9 +24,9 @@ var paths = {
   static: ['static/*', 'static/**/*']
 };
 
-gulp.task('start', ['start', 'watch']);
+gulp.task('start', ['build', 'watch', 'start']);
 
-gulp.task('build', ['clean', 'js', 'styles', 'static']);
+gulp.task('build', ['static', 'js', 'styles']);
 
 gulp.task('deploy', ['build'], function() {
   return gulp.src(['build/*', 'build/**/*'])

@@ -8,8 +8,9 @@ angular.module('app')
       $state.go('storePicker');
     }
 
-    $scope.products = [];9
+    $scope.products = [];
     $scope.page = 1;
+    $scope.category = 'Beer';
 
     $scope.load = function() {
       if($scope.loading || !$scope.page){ return; }
@@ -20,16 +21,46 @@ angular.module('app')
         per_page: 100,
         where_not: 'is_dead,is_discontinued',
         order: 'id.desc',
-        // q: 'beer',
         page: $scope.page
       };
 
       Restangular.one('stores', $scope.store.id).one('products').get(options).then(function(response) {
-        $scope.products = $scope.products.concat(_.filter(response.result, function(result) {
-          return result.primary_category === 'Beer' && result.quantity > 0;
-        }));
+        $scope.products = $scope.products.concat(response.result);
         $scope.page = response.pager.next_page;
         $scope.loading = false;
+
+        // Cache whether
+
+        var cache = localStorageService.get('cache');
+        if(!cache){
+          cache = {
+            stores: {}
+          };
+        }
+        if(!cache.stores[$scope.store.id]){
+          cache.stores[$scope.store.id] = {};
+        }
+        _.each(response.result, function(product) {
+          if(!cache.stores[$scope.store.id][product.id]){
+            cache.stores[$scope.store.id][product.id] = {
+              seen: true
+            };
+            product.new = true;
+          }
+        });
+        localStorageService.set('cache', cache);
+      });
+    };
+  })
+
+  .filter("filters", function($filter){
+    return function(input, primary, secondary){
+      return _.filter(input, function(item) {
+        return (!primary || item.primary_category === primary) 
+          && (!secondary || item.secondary_category === secondary)
+          && (primary !== 'Beer' || !item.name.match(/sake/ig))
+          && item.quantity > 0;
       });
     };
   });
+
