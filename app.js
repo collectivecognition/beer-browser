@@ -45276,12 +45276,13 @@ angular.module('app')
   }])
 
   .filter("filters", ["$filter", function($filter){
-    return function(input, primary, secondary){
+    return function(input, primary, secondary,newOnly){
       return _.filter(input, function(item) {
         return (!primary || item.primary_category === primary) 
           && (!secondary || item.secondary_category === secondary)
           && (primary !== 'Beer' || !item.name.match(/sake/ig))
-          && item.quantity > 0;
+          && item.quantity > 0
+          && (!newOnly || item.new);
       });
     };
   }]);
@@ -45334,7 +45335,7 @@ angular.module('app')
       }
     });
 }]);
-angular.module("app").run(["$templateCache", function($templateCache) {$templateCache.put("inventory.html","<div class=\"content inventory\">\n  <h1>\n    <span class=\"title\">Inventory For {{store.name}}</span>\n    <a class=\"button\" ui-sref=\"storePicker\">Change Your Store</a>\n\n    <!-- <select ng-model=\"category\">\n      <option value=\"Beer\">Beer</option>\n      <option value=\"Wine\">Wine</option>\n    </select> -->\n  </h1>\n\n  <div infinite-scroll=\"load()\" infinite-scroll-disabled=\"loading\" infinite-scroll-distance=\"1\" class=\"products\">\n    <div ng-repeat=\"product in products | filters:category\" class=\"product\" ng-class=\"{new: product.new}\">\n      <img ng-src=\"{{product.image_thumb_url || config.app.defaultProductThumbUrl}}\">\n      <div class=\"meta\">\n        <div class=\"name\">{{product.name}}</div>\n        <div class=\"size\">{{product.package}}</div>\n        <div class=\"price\">{{product.regular_price_in_cents / 100 | currency}}</div>\n      </div>\n      <div class=\"inventory\">\n        <div class=\"big\">{{product.quantity}}</div>\n        <div class=\"small\">In Stock</div>\n      </div>\n    </div>\n    <div class=\"loading\" ng-show=\"loading\"></div>\n  </div>\n</div>");
+angular.module("app").run(["$templateCache", function($templateCache) {$templateCache.put("inventory.html","<div class=\"content inventory\">\n  <h1>\n    <span class=\"title\">Inventory For {{store.name}}</span>\n    <a class=\"button\" ui-sref=\"storePicker\">Change Your Store</a>\n\n    <!-- <select ng-model=\"category\">\n      <option value=\"Beer\">Beer</option>\n      <option value=\"Wine\">Wine</option>\n    </select> -->\n\n    <input type=\"checkbox\" id=\"new\" ng-model=\"new\">\n    <label for=\"new\">New To Me</label>\n  </h1>\n\n  <div infinite-scroll=\"load()\" infinite-scroll-disabled=\"loading\" infinite-scroll-distance=\"1\" class=\"products\">\n    <div ng-repeat=\"product in products | filters:category:null:true\" class=\"product\" ng-class=\"{new: product.new}\">\n      <img ng-src=\"{{product.image_thumb_url || config.app.defaultProductThumbUrl}}\">\n      <div class=\"meta\">\n        <div class=\"name\">{{product.name}}</div>\n        <div class=\"size\">{{product.package}}</div>\n        <div class=\"price\">{{product.regular_price_in_cents / 100 | currency}}</div>\n      </div>\n      <div class=\"inventory\">\n        <div class=\"big\">{{product.quantity}}</div>\n        <div class=\"small\">In Stock</div>\n      </div>\n    </div>\n    <div class=\"loading\" ng-show=\"loading\"></div>\n  </div>\n</div>");
 $templateCache.put("storePicker.html","<div class=\"content store-picker\">\n  <h1><span class=\"title\">Search For Stores</span></h1>\n\n	<form ng-submit=\"search()\">\n		<input type=\"text\" ng-model=\"term\" placeholder=\"Search By Address Or Postal Code\">\n    <button class=\"button\">Search</button>\n	</form>\n\n  <div class=\"stores\">\n    <div ng-repeat=\"store in stores\" class=\"store\" ng-click=\"select(store)\">\n      {{store.name}}\n    </div>\n  </div>\n</div>");}]);
 angular.module("config", [])
 
