@@ -54,12 +54,13 @@ angular.module('app')
   })
 
   .filter("filters", function($filter){
-    return function(input, primary, secondary){
+    return function(input, primary, secondary,newOnly){
       return _.filter(input, function(item) {
         return (!primary || item.primary_category === primary) 
           && (!secondary || item.secondary_category === secondary)
           && (primary !== 'Beer' || !item.name.match(/sake/ig))
-          && item.quantity > 0;
+          && item.quantity > 0
+          && (!newOnly || item.new);
       });
     };
   });
